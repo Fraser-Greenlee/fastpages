@@ -8,9 +8,7 @@ https://Fraser-Greenlee.github.io/fastpages/
 
 # My Blog
 
-
 _powered by [fastpages](https://github.com/fastai/fastpages)_
-
 
 ## What To Do Next?
 
