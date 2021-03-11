@@ -29,5 +29,9 @@ iframe {
     width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: #000;
+}
+
 // If you want to turn off dark background for syntax highlighting, comment or delete the below line.
 @import "minima/fastpages-dracula-highlight"; 
