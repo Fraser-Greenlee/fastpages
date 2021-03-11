@@ -1,5 +1,4 @@
 ---
-toc: true
 layout: post
 description: Avoid posterior collapse even with a huge model.
 categories: [ML, Large prior-free models, Transformer-VAE]
@@ -18,6 +17,9 @@ To show this I'm releasing [T5-VAE](https://github.com/Fraser-Greenlee/T5-VAE) a
 [See Weights & Biasis training runs.](https://app.wandb.ai/fraser/T5-VAE?workspace=user-fraser)
 
 [Check out the source code on GitHub.](https://github.com/Fraser-Greenlee/T5-VAE)
+
+1. TOC
+{:toc}
 
 ## From Autoencoders to MMD-VAE
 

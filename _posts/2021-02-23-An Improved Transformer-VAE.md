@@ -1,5 +1,4 @@
 ---
-toc: true
 layout: post
 description: An easy to use repo with SOTA performance.
 categories: [ML, Large prior-free models, Transformer-VAE]

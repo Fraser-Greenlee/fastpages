@@ -1,5 +1,5 @@
 ---
-toc: true
+toc: false
 layout: post
 description: Learning from state changes in 1 million Python programs.
 categories: [ML, datasets, code]
@@ -11,6 +11,9 @@ Existing ML for code methods often learn from [raw source code](https://github.b
 While these offer large amounts of data they don't actually show what code fundamentally does, changes state.
 
 With that in mind I've created a dataset of over 1 million ran python programming solutions with state changes shown after each line of code. [Get it here](https://www.kaggle.com/frasergreenlee/ran-hackerrank-solutions)
+
+1. TOC
+{:toc}
 
 ## Motivation
 

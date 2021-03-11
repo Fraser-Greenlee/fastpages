@@ -1,5 +1,4 @@
 ---
-toc: true
 layout: post
 description: Finding the physics of water bending.
 categories: [games, simulation]
