@@ -80,8 +80,8 @@ One where all content matches just what we want.
 
 ## What you can do now.
 
-So if the **infocalapse**[^2] is coming how can you take advantage of this?
-The best thing to do is get involved on these early AI content generating tools.
+If we are on the cusp of a new Google how can you take advantage of this?
+The best thing to do is get involved on early AI content generation tools.
 Some of these are completely autonomous and some require a human in the loop.
 Here are some ideas I've been considering.
 
@@ -100,7 +100,7 @@ Once it can interpolate over entire documents why not use it with a search engin
 Images are interpolated several times over to generate novel and strickingly different images.
 
 This is different to most content generators in that you can't see an output image and easily know how to find it in latent space.
-In the future algorithms will be needed to discover new images in these spaces ([see Kenith Stanley's talks for more info](https://youtu.be/lhYGXYeMq_E)).
+In the future algorithms will be needed to discover new images in these spaces ([see Kenith Stanley's interview for more info](https://youtu.be/lhYGXYeMq_E)).
 Perhaps processing interpolated images with OpenAI's new CLIP model will allow discovering new images?
 
 The final result would allow for fully automanus brainstorming.
@@ -116,5 +116,3 @@ Maybe you could use latent variables to add/remove concepts in a Python function
 ## Footnotes
 
 [^1]: Since these models are trained with gradient descent they approximate non-parametric models (a.k.a. models that reason from their dataset rather than learning programs) [see more here](https://arxiv.org/abs/2012.00152).
-
-[^2]: From [Snow Crash](https://en.wikipedia.org/wiki/Snow_Crash) you can image a world where we can't disginuish an infinite source of AI generated content from real content as similar to not having any information at all.
