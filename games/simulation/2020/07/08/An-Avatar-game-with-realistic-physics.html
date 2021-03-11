@@ -129,26 +129,19 @@ window.onload = wrap_img;
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#so-how-did-i-do-this">So how did I do this?</a></li>
-<li class="toc-entry toc-h2"><a href="#3d-bending">3D bending</a></li>
-</ul><p>After watching <a href="https://www.imdb.com/title/tt0417299/">Avatar: The Last Airbender</a> I wanted to experience bending the elements just like in the show.
+    <p>After watching <a href="https://www.imdb.com/title/tt0417299/">Avatar: The Last Airbender</a> I wanted to experience bending the elements just like in the show.
 Of course actually doing this is impossible but could a game give that feeling?</p>
 
-<p><img src="/fastpages/images/katara_waterbend.gif" alt="GIF of katara water bending." title="See the smooth movement of the water."></p>
+<p><img src="/fastpages/images/katara_waterbend.gif" alt="GIF of katara water bending." title="See the smooth movement of the water." /></p>
 
 <p>It turns out that you can achieve a compelling water bendning effect using Unity!
 Here’s the end result.</p>
 
-<div class="jekyll-twitter-plugin">
-<blockquote class="twitter-tweet">
-<p lang="en" dir="ltr">Water bendings looking smooth now.<br><br>Anyone got tips on making art assets? Hoping to get an ATLA feel. <a href="https://t.co/CbdPFY8SSv">pic.twitter.com/CbdPFY8SSv</a></p>— Fraser (@FraserGreenlee) <a href="https://twitter.com/FraserGreenlee/status/1295012224793227264?ref_src=twsrc%5Etfw">August 16, 2020</a>
-</blockquote>
+<div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Water bendings looking smooth now.<br /><br />Anyone got tips on making art assets? Hoping to get an ATLA feel. <a href="https://t.co/CbdPFY8SSv">pic.twitter.com/CbdPFY8SSv</a></p>&mdash; Fraser (@FraserGreenlee) <a href="https://twitter.com/FraserGreenlee/status/1295012224793227264?ref_src=twsrc%5Etfw">August 16, 2020</a></blockquote>
 <script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </div>
 
-<h2 id="so-how-did-i-do-this">
-<a class="anchor" href="#so-how-did-i-do-this" aria-hidden="true"><span class="octicon octicon-link"></span></a>So how did I do this?</h2>
+<h2 id="so-how-did-i-do-this">So how did I do this?</h2>
 
 <p>Before jumping into 3D lets consider the problem in just 2 dimensions.
 <a href="https://coronalabs.com">Corona Labs</a> lets you make 2D cross-platform games and it comes with a realistic particle simulator.</p>
@@ -169,7 +162,7 @@ Notably this allows incrimenting particle velocity as well.</p>
 
 <p>Lets picture the first GIF but with imagined forces on the water drawn as arrows.</p>
 
-<p><img src="/fastpages/images/katara_waterbend_arrows.gif" alt="Katara water bending." title="The arrows denote forces on the water."></p>
+<p><img src="/fastpages/images/katara_waterbend_arrows.gif" alt="Katara water bending." title="The arrows denote forces on the water." /></p>
 
 <p>Now to get a bending effect we can recreate the above GIF it with multiple <code class="language-plaintext highlighter-rouge">queryRegion</code> boxes.</p>
 
@@ -193,21 +186,20 @@ To get long streams of water I gradually decrease old cell values.</p>
 Ice is a solid group of particles, green acid mixes colour with the blue water, slime is a sticky group of particles while mud is viscous.</p>
 
 <video class="codespaces-hero-video d-block width-full bg-white" alt="Codespaces demo" playsinline="" muted="" loop="" autoplay="">
-    <source type="video/mp4" src="/fastpages/videos/water-materials.mp4"></source>
+    <source type="video/mp4" src="/fastpages/videos/water-materials.mp4" />
 </video>
 
 <video class="codespaces-hero-video d-block width-full bg-white" alt="Codespaces demo" playsinline="" muted="" loop="" autoplay="">
-    <source type="video/mp4" src="/fastpages/videos/firebend-combat.mp4"></source>
+    <source type="video/mp4" src="/fastpages/videos/firebend-combat.mp4" />
 </video>
 
 <video class="codespaces-hero-video d-block width-full bg-white" alt="Codespaces demo" playsinline="" muted="" loop="" autoplay="">
-    <source type="video/mp4" src="/fastpages/videos/water-fight.mp4"></source>
+    <source type="video/mp4" src="/fastpages/videos/water-fight.mp4" />
 </video>
 
 <p>Checkout the 2D source <a href="https://github.com/Fraser-Greenlee/benders">here</a>.</p>
 
-<h2 id="3d-bending">
-<a class="anchor" href="#3d-bending" aria-hidden="true"><span class="octicon octicon-link"></span></a>3D bending</h2>
+<h2 id="3d-bending">3D bending</h2>
 
 <p>Now that our 2D bending is pretty cool we’ve just got to extend it into 3D!</p>
 
@@ -219,10 +211,7 @@ Sadly it doesn’t come with a native <code class="language-plaintext highlighte
 <p>This could clearly make a compelling VR game, unfortunatley I am too invested in an ML project right now to do more work.
 If you would like any other implementation details feel free to reach out to me on <a href="http://twitter.com/FraserGreenlee">Twitter</a>.</p>
 
-<div class="jekyll-twitter-plugin">
-<blockquote class="twitter-tweet">
-<p lang="en" dir="ltr">Water bendings looking smooth now.<br><br>Anyone got tips on making art assets? Hoping to get an ATLA feel. <a href="https://t.co/CbdPFY8SSv">pic.twitter.com/CbdPFY8SSv</a></p>— Fraser (@FraserGreenlee) <a href="https://twitter.com/FraserGreenlee/status/1295012224793227264?ref_src=twsrc%5Etfw">August 16, 2020</a>
-</blockquote>
+<div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Water bendings looking smooth now.<br /><br />Anyone got tips on making art assets? Hoping to get an ATLA feel. <a href="https://t.co/CbdPFY8SSv">pic.twitter.com/CbdPFY8SSv</a></p>&mdash; Fraser (@FraserGreenlee) <a href="https://twitter.com/FraserGreenlee/status/1295012224793227264?ref_src=twsrc%5Etfw">August 16, 2020</a></blockquote>
 <script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </div>
 

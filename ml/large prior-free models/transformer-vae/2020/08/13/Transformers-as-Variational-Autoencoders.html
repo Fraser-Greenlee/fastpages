@@ -132,11 +132,7 @@ window.onload = wrap_img;
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#from-autoencoders-to-mmd-vae">From Autoencoders to MMD-VAE</a></li>
-<li class="toc-entry toc-h2"><a href="#a-transformer-as-an-mmd-vae">A Transformer as an MMD-VAE</a></li>
-<li class="toc-entry toc-h2"><a href="#use-cases">Use cases</a></li>
-</ul><p>Image generators based on Variational Autoencoders have had huge success.
+    <p>Image generators based on Variational Autoencoders have had huge success.
 Unfortunately the same cannot be said for sequence generation.
 There seems to be little interest in this space but with Transformers it is now possible to learn smooth latent spaces of large structured sequences.</p>
 
@@ -148,12 +144,17 @@ There seems to be little interest in this space but with Transformers it is now 
 
 <p><a href="https://github.com/Fraser-Greenlee/T5-VAE">Check out the source code on GitHub.</a></p>
 
-<h2 id="from-autoencoders-to-mmd-vae">
-<a class="anchor" href="#from-autoencoders-to-mmd-vae" aria-hidden="true"><span class="octicon octicon-link"></span></a>From Autoencoders to MMD-VAE</h2>
+<ol id="markdown-toc">
+  <li><a href="#from-autoencoders-to-mmd-vae" id="markdown-toc-from-autoencoders-to-mmd-vae">From Autoencoders to MMD-VAE</a></li>
+  <li><a href="#a-transformer-as-an-mmd-vae" id="markdown-toc-a-transformer-as-an-mmd-vae">A Transformer as an MMD-VAE</a></li>
+  <li><a href="#use-cases" id="markdown-toc-use-cases">Use cases</a></li>
+</ol>
+
+<h2 id="from-autoencoders-to-mmd-vae">From Autoencoders to MMD-VAE</h2>
 
 <p>To understand how this works and the ways it differs from previous systems, it is important to know how an autoencoder works, specifically a Maximum Mean Discrepancy Variational Autoencoder.</p>
 
-<p><a href="/fastpages/images/prog_synth/autoencoder.png"><img src="/fastpages/images/prog_synth/autoencoder.png" alt="."></a></p>
+<p><a href="/fastpages/images/prog_synth/autoencoder.png"><img src="/fastpages/images/prog_synth/autoencoder.png" alt="." /></a></p>
 
 <p>An Autoencoder learns to recreate its training data by compressing the data into a compressed representation called a “latent code” and decompressing it back into the original data.
 Each latent code is just a vector of numbers with each number constrained within some bounds (between -1, 1 in this case by a <a href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html#torch.nn.Tanh">Tanh function</a>).
@@ -186,13 +187,12 @@ It optimises the similarity between latent codes &amp; target samples separately
 <p>This loss is much softer on the latest codes and solved posterior collapse for my use case.
 If your keen to learn more about MMD-VAE you should check out <a href="https://ermongroup.github.io/blog/a-tutorial-on-mmd-variational-autoencoders/">this post</a>.</p>
 
-<h2 id="a-transformer-as-an-mmd-vae">
-<a class="anchor" href="#a-transformer-as-an-mmd-vae" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Transformer as an MMD-VAE</h2>
+<h2 id="a-transformer-as-an-mmd-vae">A Transformer as an MMD-VAE</h2>
 
 <p>Lets put this model to use to generate some structured sequences.
 The <a href="https://huggingface.co/transformers/model_doc/t5.html">T5 model</a> provided by Huggingface will create the Encoder &amp; Decoder for the sequences. To get a compressed encoding of the inputs, the inputs are first padded to ensure each the sequence is 12 tokens long. Finally, some fully-connected layers compress and then decompress the fixed length encodings. I’ve named this model “T5-VAE”.</p>
 
-<p><a href="/fastpages/images/prog_synth/t5-vae.png"><img src="/fastpages/images/prog_synth/t5-vae.png" alt="."></a></p>
+<p><a href="/fastpages/images/prog_synth/t5-vae.png"><img src="/fastpages/images/prog_synth/t5-vae.png" alt="." /></a></p>
 
 <p>This model is then trained to recreate its input tokens with the MMD loss on its latent code. Once training is complete it is possible to start generating some sequences!</p>
 
@@ -233,8 +233,7 @@ x <span class="o">=</span> int<span class="o">(</span>h[-1 - 1]<span class="o">)
 
 <p>Though the intermediate values are good, just randomly sampling from the latent space occasionally produces invalid outputs.</p>
 
-<h2 id="use-cases">
-<a class="anchor" href="#use-cases" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use cases</h2>
+<h2 id="use-cases">Use cases</h2>
 
 <p>Now that we can learn smooth latent spaces of sequences a lot is possible:</p>
 

@@ -132,13 +132,7 @@ window.onload = wrap_img;
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#motivation">Motivation</a></li>
-<li class="toc-entry toc-h2"><a href="#baselines">Baselines</a></li>
-<li class="toc-entry toc-h2"><a href="#improvements">Improvements</a></li>
-<li class="toc-entry toc-h2"><a href="#changes-that-didnt-work-out">Changes that didn’t work out.</a></li>
-<li class="toc-entry toc-h2"><a href="#conculsion">Conculsion</a></li>
-</ul><p><img src="/fastpages/images/0-6.png" alt="" title="Tranformer-VAE on MNIST pixels."></p>
+    <p><img src="/fastpages/images/0-6.png" alt="" title="Tranformer-VAE on MNIST pixels." /></p>
 
 <p>I have made an improved Transformer-VAE that gives much more compelling interpolations on a wider range of tasks than my previous work <a href="https://fraser-greenlee.github.io/2020/08/13/Transformers-as-Variational-Autoencoders.html">T5-VAE</a>.
 You can try out training in <a href="https://colab.research.google.com/drive/1S8sUSkc_7ON00HDnse1MUXTTflo59VxA?usp=sharing">Colab</a> or check out the <a href="https://github.com/Fraser-Greenlee/transformer-vae">source code</a>.</p>
@@ -153,8 +147,7 @@ You can try out training in <a href="https://colab.research.google.com/drive/1S8
   <li><a href="#conculsion" id="markdown-toc-conculsion">Conculsion</a></li>
 </ol>
 
-<h2 id="motivation">
-<a class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h2>
+<h2 id="motivation">Motivation</h2>
 
 <p>As outlined in a <a href="https://fraser-greenlee.github.io/2020/08/13/Transformers-as-Variational-Autoencoders.html">previous post</a> I think large transformer VAEs have a lot of potential.</p>
 
@@ -166,8 +159,7 @@ This means a large scale Transformer-VAE will be able to create better interpola
 
 <p>With this in mind I set out to improve on my initial Transformer VAE.</p>
 
-<h2 id="baselines">
-<a class="anchor" href="#baselines" aria-hidden="true"><span class="octicon octicon-link"></span></a>Baselines</h2>
+<h2 id="baselines">Baselines</h2>
 
 <p>To test performance I opted to judge the model on interpolation quality and how semantically organised the latent codes are.</p>
 
@@ -179,8 +171,7 @@ Here I define syntax as a strict set of rules that all samples must follow (like
 <p>The syntax test used this <a href="https://huggingface.co/datasets/Fraser/python-lines">python lines dataset</a> and interpolations were tested for syntax errors.
 For semantics I trained the model to recreate MNIST characters using <a href="https://huggingface.co/datasets/Fraser/mnist-text-small">this dataset</a> and looked to see if the character mixes were credible.</p>
 
-<h2 id="improvements">
-<a class="anchor" href="#improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Improvements</h2>
+<h2 id="improvements">Improvements</h2>
 
 <p>Firstly I’ve swapped out the T5-encoder for the <a href="https://arxiv.org/pdf/2006.03236.pdf">Funnel transformer</a> encoder (though still using the shared T5 embeddings).
 The Funnel transformer is trained to compress sequence data so it doesn’t have to use as many parameters to produce encodings.</p>
@@ -199,8 +190,7 @@ This can greatly help save memory and approximates the reversible layers of the 
 Here I just feed each decoder layer subsequences of the data that overlap between layers.
 In the future I could replace the self-attention layers with a Longformer self-attention followed by T5 cross attention on subsequences.</p>
 
-<h2 id="changes-that-didnt-work-out">
-<a class="anchor" href="#changes-that-didnt-work-out" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changes that didn’t work out.</h2>
+<h2 id="changes-that-didnt-work-out">Changes that didn’t work out.</h2>
 
 <p>The key idea with Transformer-VAE is that by using a large transformer we can get a consistently valid output regardless of the latent code.
 Currently interpolation performance doesn’t clearly improve as the model gets more accurate.
@@ -255,8 +245,7 @@ This is to encourage the latent space to become a bijective mapping.</p>
 This is likely because these methods were original applied to image models where the data is less discrete.
 Current SOTA for training text transformers with an adversary is by using reinforcement learning which I wanted to stay away from as it would necessitate longer training times.</p>
 
-<h2 id="conculsion">
-<a class="anchor" href="#conculsion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conculsion</h2>
+<h2 id="conculsion">Conculsion</h2>
 
 <p>Overall this project took wayyy longer than I expected.
 In the future I’m going to try to work more incrementally, making small, test-able experiments at a time.</p>

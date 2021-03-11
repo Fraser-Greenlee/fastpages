@@ -132,38 +132,35 @@ window.onload = wrap_img;
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#motivation">Motivation</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#an-example">An example</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#how-i-got-this-data">How I got this data</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#recording-state-changes">Recording State Changes</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#initial-results">Initial Results</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#pre-training">Pre-Training</a></li>
-<li class="toc-entry toc-h3"><a href="#a-downstream-task">A Downstream Task</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#future-work">Future Work</a></li>
-</ul><p>Existing ML for code methods often learn from <a href="https://github.blog/2019-09-26-introducing-the-codesearchnet-challenge/">raw source code</a> and sometimes use <a href="https://slideslive.com/38917598/program-understanding-synthesis-and-verification-with-graph-neural-networks">data flow</a> to understand programs.
+    <p>Existing ML for code methods often learn from <a href="https://github.blog/2019-09-26-introducing-the-codesearchnet-challenge/">raw source code</a> and sometimes use <a href="https://slideslive.com/38917598/program-understanding-synthesis-and-verification-with-graph-neural-networks">data flow</a> to understand programs.
 While these offer large amounts of data they don’t actually show what code fundamentally does, changes state.</p>
 
 <p>With that in mind I’ve created a dataset of over 1 million ran python programming solutions with state changes shown after each line of code. <a href="https://www.kaggle.com/frasergreenlee/ran-hackerrank-solutions">Get it here</a></p>
 
-<h2 id="motivation">
-<a class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h2>
+<ol id="markdown-toc">
+  <li><a href="#motivation" id="markdown-toc-motivation">Motivation</a>    <ol>
+      <li><a href="#an-example" id="markdown-toc-an-example">An example</a></li>
+    </ol>
+  </li>
+  <li><a href="#how-i-got-this-data" id="markdown-toc-how-i-got-this-data">How I got this data</a>    <ol>
+      <li><a href="#recording-state-changes" id="markdown-toc-recording-state-changes">Recording State Changes</a></li>
+    </ol>
+  </li>
+  <li><a href="#initial-results" id="markdown-toc-initial-results">Initial Results</a>    <ol>
+      <li><a href="#pre-training" id="markdown-toc-pre-training">Pre-Training</a></li>
+      <li><a href="#a-downstream-task" id="markdown-toc-a-downstream-task">A Downstream Task</a></li>
+    </ol>
+  </li>
+  <li><a href="#future-work" id="markdown-toc-future-work">Future Work</a></li>
+</ol>
+
+<h2 id="motivation">Motivation</h2>
 
 <p>Most AI for code models only learn from reading code. This lets AI models recognise patterns in the code &amp; generate sensible-looking code.</p>
 
 <p>But do these models really understand code? If you were to read code without running anything and had no prior knowledge of programming would you know how to use it?</p>
 
-<h3 id="an-example">
-<a class="anchor" href="#an-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>An example</h3>
+<h3 id="an-example">An example</h3>
 
 <p>Lets try learning about a single program character the way an AI would.</p>
 
@@ -214,8 +211,7 @@ While these offer large amounts of data they don’t actually show what code fun
 
 <p>Think how much more code you would need to read to figure out what <code class="language-plaintext highlighter-rouge">六</code> meant if you couldn’t see state changes. For this reason I rekon showing state changes will help AI models understand code.</p>
 
-<h2 id="how-i-got-this-data">
-<a class="anchor" href="#how-i-got-this-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>How I got this data</h2>
+<h2 id="how-i-got-this-data">How I got this data</h2>
 
 <p>I first found the <a href="https://www.kaggle.com/arjoonn/codechef-competitive-programming">CodeChef dataset</a> it’s got 1 million solutions to programming problems but few are in Python and many aren’t runnable.</p>
 
@@ -223,46 +219,41 @@ While these offer large amounts of data they don’t actually show what code fun
 I used <a href="https://selenium-python.readthedocs.io/getting-started.html">Selenium</a> to click on that button for every problem to get solution URLs. Then I used <a href="https://requests.readthedocs.io/en/master/">Requests</a> to download those solutions.
 After a few days I had 1 million solution code snippets with on average 1k solutions per problem.</p>
 
-<h3 id="recording-state-changes">
-<a class="anchor" href="#recording-state-changes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Recording State Changes</h3>
+<h3 id="recording-state-changes">Recording State Changes</h3>
 
 <p>Once I had my runnable code snippets I used <a href="https://github.com/alexmojaki/snoop">Snoop</a> to record all the state changes occurring in each program run.</p>
 
 <p>Snoop dynamically adds logs to your code showing what has executed &amp; which state values have changed. To see how this works check out this <a href="https://www.youtube.com/watch?v=Wm47491S-Fo">talk</a>.</p>
 
-<p><img src="/fastpages/images/snoops-output.png" alt="Some Snoop output." title="Some Snoop output."></p>
+<p><img src="/fastpages/images/snoops-output.png" alt="Some Snoop output." title="Some Snoop output." /></p>
 
 <p>Next step was to run all the code snippets. The script used to run the code and progress logs can be found <a href="https://app.wandb.ai/fraser/run-code-snippets/runs/3q9pzype/files/code/data/run_code/hacker-rank/get_problem_snoops.py">here</a>. Thankfully running all these code snippets didn’t cause many issues, I just had to watch out for some the occasional massive code snippet.</p>
 
 <p>An interesting yet worrying feature of the Snoop files is that they are highly compressible, the zip file is 1/10th the size of the txt file. This is likely due to repetitions in the snoop due to the same code being ran repeatedly in for loops and method calls.</p>
 
-<h2 id="initial-results">
-<a class="anchor" href="#initial-results" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initial Results</h2>
+<h2 id="initial-results">Initial Results</h2>
 
 <p>With the dataset completed I trained <a href="http://jalammar.github.io/illustrated-gpt2/">gpt2</a> to perform causal language modelling on the raw text. I wanted to see if the Snoops text offers the model any unique insights about code.</p>
 
-<h3 id="pre-training">
-<a class="anchor" href="#pre-training" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pre-Training</h3>
+<h3 id="pre-training">Pre-Training</h3>
 
 <p><a href="https://app.wandb.ai/fraser/lm_snoop">Here</a> you can see some initial results on training gpt2 &amp; <a href="http://jalammar.github.io/illustrated-bert/">BERT</a> on the data.</p>
 
-<p><img src="/fastpages/images/snoops-gpt2-training.png" alt="Eval loss while training gpt2-medium from-scratch/pre-trained on the Snoop text." title="Eval loss while training gpt2-medium from-scratch/pre-trained on the Snoop text."></p>
+<p><img src="/fastpages/images/snoops-gpt2-training.png" alt="Eval loss while training gpt2-medium from-scratch/pre-trained on the Snoop text." title="Eval loss while training gpt2-medium from-scratch/pre-trained on the Snoop text." /></p>
 
 <p>Surprisingly gpt2 with OpenAI pre-training (blue) is actually already very accurate on the Snoop text.</p>
 
 <p>When having it generate text with short prompts I found it to be far less accurate than the 1.1 evaluation perplexity. It seems like the gpt2 model is spotting patterns in it’s prefix string &amp; is using them to predict future tokens rather than having a probabilistic model of an interpreter.</p>
 
-<h3 id="a-downstream-task">
-<a class="anchor" href="#a-downstream-task" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Downstream Task</h3>
+<h3 id="a-downstream-task">A Downstream Task</h3>
 
 <p><a href="https://app.wandb.ai/fraser/conala">Here</a> you can see it fine-tuned on <a href="https://conala-corpus.github.io">CoNaLa</a> (a description-to-code translation task). The Snoop data is better than no pre-training but not as good as gpt2 with OpenAI pre-training. Of course the Snoops model hasn’t had the same amount of training time nor has it seen natural language before so its not a fair test.</p>
 
-<p><img src="/fastpages/images/conala-gpt2.png" alt="Fine-tuning gpt2 from scratch vs pre-trained." title="Fine-tuning gpt2 from scratch vs pre-trained."></p>
+<p><img src="/fastpages/images/conala-gpt2.png" alt="Fine-tuning gpt2 from scratch vs pre-trained." title="Fine-tuning gpt2 from scratch vs pre-trained." /></p>
 
-<p><img src="/fastpages/images/conala-gpt2-pretrained.png" alt="Fine-tuning Snoop pre-trained vs OpenAI pre-trained." title="Fine-tuning Snoop pre-trained vs OpenAI pre-trained."></p>
+<p><img src="/fastpages/images/conala-gpt2-pretrained.png" alt="Fine-tuning Snoop pre-trained vs OpenAI pre-trained." title="Fine-tuning Snoop pre-trained vs OpenAI pre-trained." /></p>
 
-<h2 id="future-work">
-<a class="anchor" href="#future-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future Work</h2>
+<h2 id="future-work">Future Work</h2>
 
 <p>There’s a lot of potential in using state changes to understand code. Right now I don’t think just reading the raw snoops text is the way to go but I think a well formatted, compressed version could do better.
 Next time I’ll show how well a compressed version of this dataset can teach a transformer to act as a Python interpreter.</p>
