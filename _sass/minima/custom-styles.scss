@@ -7,5 +7,21 @@
 /*-----------------------------------*/
 /*----- ADD YOUR STYLES BELOW -------*/
 
+.page-content {
+    color: #566b78;
+}
+
+.site-header {
+    border-top: 5px solid #e81c4f;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.home > p {
+    font-size: 16px;
+}
+
 // If you want to turn off dark background for syntax highlighting, comment or delete the below line.
 @import "minima/fastpages-dracula-highlight"; 

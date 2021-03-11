@@ -4,8 +4,6 @@ title: About Me
 permalink: /about/
 ---
 
-This website is powered by **[fastpages](https://github.com/fastai/fastpages)** [^1].
+I'm a software Engineer at [Darktrace](https://www.darktrace.com/) doing ML research in my spare time.
 
-
-
-[^1]:a blogging platform that natively supports Jupyter notebooks in addition to other formats.
+Checkout my [CV](https://github.com/Fraser-Greenlee/cv/raw/main/Fraser-Greenlee-CV.pdf)
