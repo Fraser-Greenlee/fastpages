@@ -435,6 +435,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
 
 iframe { border: none; height: 400px; width: 100%; }
 
+h1, h2, h3, h4, h5, h6 { color: #000; }
+
 .language-python + .language-plaintext { border-left: 1px solid grey; margin-left: 1rem !important; }
 
 [class^="language-"]:not(.language-plaintext) pre, [class^="language-"]:not(.language-plaintext) code { background-color: #323443 !important; color: #f8f8f2; }
