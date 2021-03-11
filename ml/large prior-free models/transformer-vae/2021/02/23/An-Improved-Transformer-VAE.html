@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>An Improved Transformer-VAE | Fraser Greenlee</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="An Improved Transformer-VAE" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An easy to use repo with SOTA performance." />
+<meta property="og:description" content="An easy to use repo with SOTA performance." />
+<link rel="canonical" href="https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/transformer-vae/2021/02/23/An-Improved-Transformer-VAE.html" />
+<meta property="og:url" content="https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/transformer-vae/2021/02/23/An-Improved-Transformer-VAE.html" />
+<meta property="og:site_name" content="Fraser Greenlee" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-23T00:00:00-06:00" />
+<script type="application/ld+json">
+{"url":"https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/transformer-vae/2021/02/23/An-Improved-Transformer-VAE.html","@type":"BlogPosting","headline":"An Improved Transformer-VAE","dateModified":"2021-02-23T00:00:00-06:00","datePublished":"2021-02-23T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/transformer-vae/2021/02/23/An-Improved-Transformer-VAE.html"},"description":"An easy to use repo with SOTA performance.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/fastpages/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://fraser-greenlee.github.io/fastpages/feed.xml" title="Fraser Greenlee" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JGPYQFPWNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JGPYQFPWNN');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/fastpages/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/fastpages/">Fraser Greenlee</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/fastpages/about/">About Me</a><a class="page-link" href="/fastpages/search/">Search</a><a class="page-link" href="/fastpages/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">An Improved Transformer-VAE</h1><p class="page-description">An easy to use repo with SOTA performance.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-02-23T00:00:00-06:00" itemprop="datePublished">
+        Feb 23, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/fastpages/categories/#ML">ML</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/fastpages/categories/#Large prior-free models">Large prior-free models</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/fastpages/categories/#Transformer-VAE">Transformer-VAE</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#motivation">Motivation</a></li>
+<li class="toc-entry toc-h2"><a href="#baselines">Baselines</a></li>
+<li class="toc-entry toc-h2"><a href="#improvements">Improvements</a></li>
+<li class="toc-entry toc-h2"><a href="#changes-that-didnt-work-out">Changes that didn’t work out.</a></li>
+<li class="toc-entry toc-h2"><a href="#conculsion">Conculsion</a></li>
+</ul><p><img src="/fastpages/images/0-6.png" alt="" title="Tranformer-VAE on MNIST pixels."></p>
+
+<p>I have made an improved Transformer-VAE that gives much more compelling interpolations on a wider range of tasks than my previous work <a href="https://fraser-greenlee.github.io/2020/08/13/Transformers-as-Variational-Autoencoders.html">T5-VAE</a>.
+You can try out training in <a href="https://colab.research.google.com/drive/1S8sUSkc_7ON00HDnse1MUXTTflo59VxA?usp=sharing">Colab</a> or check out the <a href="https://github.com/Fraser-Greenlee/transformer-vae">source code</a>.</p>
+
+<p>In this post I’ll describe the changes I made and what this has taught me about independent ML research.</p>
+
+<ol id="markdown-toc">
+  <li><a href="#motivation" id="markdown-toc-motivation">Motivation</a></li>
+  <li><a href="#baselines" id="markdown-toc-baselines">Baselines</a></li>
+  <li><a href="#improvements" id="markdown-toc-improvements">Improvements</a></li>
+  <li><a href="#changes-that-didnt-work-out" id="markdown-toc-changes-that-didnt-work-out">Changes that didn’t work out.</a></li>
+  <li><a href="#conculsion" id="markdown-toc-conculsion">Conculsion</a></li>
+</ol>
+
+<h2 id="motivation">
+<a class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h2>
+
+<p>As outlined in a <a href="https://fraser-greenlee.github.io/2020/08/13/Transformers-as-Variational-Autoencoders.html">previous post</a> I think large transformer VAEs have a lot of potential.</p>
+
+<p>They let you interpolate between pieces of data (text, images, etc) to find new and plausible combinations.
+By interpolating between data points we can make machines creative.</p>
+
+<p>Transformers are the most general type of neural network, able to get top results in images &amp; text with few priors on the data.
+This means a large scale Transformer-VAE will be able to create better interpolations than any other architecture.</p>
+
+<p>With this in mind I set out to improve on my initial Transformer VAE.</p>
+
+<h2 id="baselines">
+<a class="anchor" href="#baselines" aria-hidden="true"><span class="octicon octicon-link"></span></a>Baselines</h2>
+
+<p>To test performance I opted to judge the model on interpolation quality and how semantically organised the latent codes are.</p>
+
+<p>To check the semantic organisation of the latent codes I used a <a href="https://huggingface.co/datasets/Fraser/news-category-dataset">news headlines dataset</a> and trained an SVM on the latent codes to predict the news headline category.</p>
+
+<p>For interpolation quality I looked at syntactic &amp; semantic correctness.
+Here I define syntax as a strict set of rules that all samples must follow (like those of a compiler), for semantics I mean that samples qualitatively appear to be a mix between one sample and the other.</p>
+
+<p>The syntax test used this <a href="https://huggingface.co/datasets/Fraser/python-lines">python lines dataset</a> and interpolations were tested for syntax errors.
+For semantics I trained the model to recreate MNIST characters using <a href="https://huggingface.co/datasets/Fraser/mnist-text-small">this dataset</a> and looked to see if the character mixes were credible.</p>
+
+<h2 id="improvements">
+<a class="anchor" href="#improvements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Improvements</h2>
+
+<p>Firstly I’ve swapped out the T5-encoder for the <a href="https://arxiv.org/pdf/2006.03236.pdf">Funnel transformer</a> encoder (though still using the shared T5 embeddings).
+The Funnel transformer is trained to compress sequence data so it doesn’t have to use as many parameters to produce encodings.</p>
+
+<p>Then I treat each funnel token as its own seperate latent code, this gives me more latent codes to use in the MMD loss.
+This gives me more tokens to regularise which is important when the total batch size is low.</p>
+
+<p>When creating the reconstructed encoding I use LayerNorm on the reconstructed tokens to match the Funnel encoder.</p>
+
+<p>For handling large sequences I added gradient checkpointing and a basic window attention mechanism.</p>
+
+<p>Gradient checkpointing simply ignores the gradients for most layers and recalculates then when backpropagating.
+This can greatly help save memory and approximates the reversible layers of the Reformer which doesn’t have cross-attention.</p>
+
+<p>Window attention only handles operates on subsequences of the data of length widow size.
+Here I just feed each decoder layer subsequences of the data that overlap between layers.
+In the future I could replace the self-attention layers with a Longformer self-attention followed by T5 cross attention on subsequences.</p>
+
+<h2 id="changes-that-didnt-work-out">
+<a class="anchor" href="#changes-that-didnt-work-out" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changes that didn’t work out.</h2>
+
+<p>The key idea with Transformer-VAE is that by using a large transformer we can get a consistently valid output regardless of the latent code.
+Currently interpolation performance doesn’t clearly improve as the model gets more accurate.
+I measure this by learning lines of Python code and measuring how often interpolations have syntax errors.</p>
+
+<p>Here are some samples from my best traininig run (note that auto-encoding accuracy is 89% <a href="https://wandb.ai/fraser/transformer-vae-tests/runs/e1r7vvru?workspace=user-fraser">all logs</a>):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ratio         sequence                                                valid
+</span>
+<span class="mi">0</span>             <span class="n">start_timeperiod</span> <span class="o">=</span> <span class="n">prev_timeperiod</span>                        <span class="n">T</span>
+<span class="mf">0.1</span>           <span class="n">start_timeperiod</span> <span class="o">=</span> <span class="n">prev_timeperiod</span>                        <span class="n">T</span>
+<span class="mf">0.2</span>           <span class="n">start_timeperiod</span> <span class="o">=</span> <span class="n">prev_timeperiod</span>                        <span class="n">T</span>
+<span class="mf">0.3</span>           <span class="n">start_timeperiod</span> <span class="o">=</span> <span class="n">prev_timeperiod</span>                        <span class="n">T</span>
+<span class="mf">0.4</span>           <span class="n">start_timeperios</span> <span class="o">=</span> <span class="n">prev_Infood</span>                            <span class="n">T</span>
+<span class="mf">0.5</span>           <span class="n">return_qualos</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">vlabo</span><span class="p">)</span>                                <span class="n">T</span>
+<span class="mf">0.6</span>           <span class="k">return</span> <span class="n">summary_stats</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">balance</span><span class="p">))</span>                      <span class="bp">False</span>
+<span class="mf">0.7</span>           <span class="k">return</span> <span class="n">summary_stats</span><span class="p">(</span><span class="n">balance</span><span class="p">))</span>                            <span class="bp">False</span>
+<span class="mf">0.8</span>           <span class="k">return</span> <span class="n">summary_stats</span><span class="p">(</span><span class="n">balance</span><span class="p">))</span>                            <span class="bp">False</span>
+<span class="mf">0.9</span>           <span class="k">return</span> <span class="n">summary_stats</span><span class="p">(</span><span class="n">balance</span><span class="p">))</span>                            <span class="bp">False</span>
+<span class="mi">1</span>             <span class="k">return</span> <span class="n">summary_stats</span><span class="p">(</span><span class="n">balance</span><span class="p">))</span>                            <span class="bp">False</span>
+
+<span class="mi">0</span>             <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">'Infinite observation encountered.'</span><span class="p">)</span>     <span class="n">T</span>
+<span class="mf">0.1</span>           <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">'Infinite observation encountered.'</span><span class="p">)</span>     <span class="n">T</span>
+<span class="mf">0.2</span>           <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">'Infinite observation encountered.'</span><span class="p">)</span>     <span class="n">T</span>
+<span class="mf">0.3</span>           <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">'Infinite observation encountered.'</span><span class="p">)</span>     <span class="n">T</span>
+<span class="mf">0.4</span>           <span class="k">raise</span> <span class="n">outError</span><span class="p">(</span><span class="s">' prefinite observation_type'</span><span class="p">.</span><span class="s">')           False
+0.5           raise out('</span><span class="n">lert_typeREN_type</span><span class="s">'.)                           False
+0.6           global outdir_type_type._type                             False
+0.7           global outdir_type_type                                   T
+0.8           global outdir_type_type                                   T
+0.9           global outdir_type_type                                   T
+1             global outdir_type_                                       T
+</span></code></pre></div></div>
+
+<p>Overall ~65% of interpolation points were valid.
+Note that I did not use a Python specific tokenizer which means that some tokens will make syntax errors more likely.
+One potential way to improve this is to optimize the interpolations directly.</p>
+
+<p>I tried 3 methods of doing this, none substantially changed performance.</p>
+
+<p>Critic loss had another funnel encoder operate on the final decoder hidden state to predict the interpolation ratio (inspired by the <a href="https://arxiv.org/pdf/1807.07543.pdf">adviserial interpolations paper</a>).
+The critic was accurate but it didn’t improve the model.</p>
+
+<p>Cycle loss put a cosine embedding loss on <code class="language-plaintext highlighter-rouge">latent VS Encoder(Decoder( latent ))</code>.
+This is to encourage the latent space to become a bijective mapping.</p>
+
+<p>Lastly I tried adding a smoothness loss where the gradient of the logits w.r.t the interpolation ratio was minimized.</p>
+
+<p>Both of the above methods were inspired by <a href="https://arxiv.org/pdf/2008.01487.pdf">this paper</a>.</p>
+
+<p>Unfortunately I didn’t learn a great deal from these methods, they just didn’t update the model that much or lowered performance.
+This is likely because these methods were original applied to image models where the data is less discrete.
+Current SOTA for training text transformers with an adversary is by using reinforcement learning which I wanted to stay away from as it would necessitate longer training times.</p>
+
+<h2 id="conculsion">
+<a class="anchor" href="#conculsion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conculsion</h2>
+
+<p>Overall this project took wayyy longer than I expected.
+In the future I’m going to try to work more incrementally, making small, test-able experiments at a time.</p>
+
+<p><strong>Tips for your own research side project:</strong></p>
+<ul>
+  <li>Remember that choosing the right thing to work on is more important than running experiments and writing code.</li>
+  <li>Start by setting up a small test of your hypothesis, this should be a baseline with a performance metric.</li>
+  <li>Stay small, reuse open-source code &amp; data where possible and do fast runs on Google Colab.</li>
+  <li>Lean on the side of caution when trying out a new method. Read related papers where possible so you can skip on less promising ideas.</li>
+</ul>
+
+<p>If you want to see even more results you can check out this <a href="https://wandb.ai/fraser/transformer-vae-tests/reports/-WIP-Transformer-VAE-Performance-overview---Vmlldzo0MTQ1OTc">Weights and Biasis report</a>.
+I hope to release some cool demos using this project soon!
+If you want to help out feel free to reach out to <a href="https://twitter.com/FraserGreenlee">@FraserGreenlee</a>.</p>
+
+<p>There is a ton of ideas yet to be explored using this project!</p>
+<ul>
+  <li>What would an <a href="https://www.artbreeder.com">ArtBreeder</a> of sequences be like? Could it create compelling writing prompts via interpolation?</li>
+  <li>Can semantic directions in latent space be found so you can edit texts at a high level?</li>
+  <li>Does part of the latent codes encode style? If so can that style be applied to other sequences?</li>
+  <li>The model has a prior on the distribution of latent codes, could that be replaced by a more general loss?</li>
+  <li>I was keen on smooth latent codes as I hoped to take advantage of their differentiability. Now discrete VQ-VAEs are shown to achieve great results why not look into converting this project into one?</li>
+</ul>
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="Fraser-Greenlee/fastpages"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/fastpages/ml/large%20prior-free%20models/transformer-vae/2021/02/23/An-Improved-Transformer-VAE.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/fastpages/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/fastpages/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/fastpages/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>ML projects et al.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/Fraser-Greenlee" title="Fraser-Greenlee"><svg class="svg-icon grey"><use xlink:href="/fastpages/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/FraserGreenlee" title="FraserGreenlee"><svg class="svg-icon grey"><use xlink:href="/fastpages/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
