@@ -122,6 +122,6 @@ Next time I'll show how well a compressed version of this dataset can teach a tr
 Here's some other investigations you could do with this dataset:
 
 - Further testing on how this helps downstream tasks, try training a language model on just the code & just the Snoop, see which does better on downstream tasks & by how much. These downstream tasks could include bug detection, data type prediction, search & description2code generation.
-- Run Snoop on the Django source code with the [English2Django dataset](https://ahcweb01.naist.jp/pseudogen/) comments in the code. That way a language model will learn NLP, code & state all at the same time. Warning I got a lot of `STATE_UNAVAILABLE` messages when I tried this so be ready to filter a lot of data.
+- Run Snoop on the Django source code with the [English2Django dataset](https://ahcweb01.naist.jp/pseudogen/) comments in the code. That way a language model will learn NLP, code & state all at the same time. Note that I got a lot of `STATE_UNAVAILABLE` messages when I tried this so be ready to filter a lot of data.
 - Try applying this method to another programming language, maybe there's a similar tool for Java or Javascript?
 - Try filtering & rearranging the data for new tasks. It offers a valuable insight as to what parts of the source code are useful to humans.
