@@ -3,7 +3,7 @@ toc: false
 layout: post
 description: Learning from state changes in 1 million Python programs.
 categories: [ML, datasets, code]
-title: A dataset of ran code.
+title: A dataset of ran code
 comments: true
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 description: Finding the physics of water bending.
 categories: [games, simulation]
-title: An Avatar game with realistic physics.
+title: An Avatar game with realistic physics
 comments: true
 ---
 

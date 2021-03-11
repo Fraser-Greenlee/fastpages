@@ -3,9 +3,9 @@ toc: false
 layout: post
 description: What happens when every plausible idea is an inference away.
 categories: [ML]
-title: Interpolating the internet.
+title: Interpolating the internet
 comments: true
-hide: true
+hide: false
 ---
 
 Large scale Deep Learning models can combine abstract concepts in new ways.
