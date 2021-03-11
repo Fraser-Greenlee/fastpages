@@ -4,6 +4,7 @@ layout: post
 description: Finding the physics of water bending.
 categories: [games, simulation]
 title: An Avatar game with realistic physics.
+comments: true
 ---
 
 After watching [Avatar: The Last Airbender](https://www.imdb.com/title/tt0417299/) I wanted to experience bending the elements just like in the show.

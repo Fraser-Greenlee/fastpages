@@ -4,6 +4,7 @@ layout: post
 description: Learning from state changes in 1 million Python programs.
 categories: [datasets, code]
 title: A dataset of ran code.
+comments: true
 ---
 
 Existing ML for code methods often learn from [raw source code](https://github.blog/2019-09-26-introducing-the-codesearchnet-challenge/) and sometimes use [data flow](https://slideslive.com/38917598/program-understanding-synthesis-and-verification-with-graph-neural-networks) to understand programs.
