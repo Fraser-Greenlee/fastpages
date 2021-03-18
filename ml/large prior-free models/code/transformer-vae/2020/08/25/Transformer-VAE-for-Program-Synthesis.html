@@ -10,15 +10,15 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Find the right program in a latent space." />
 <meta property="og:description" content="Find the right program in a latent space." />
-<link rel="canonical" href="https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html" />
-<meta property="og:url" content="https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html" />
+<link rel="canonical" href="https://fraser-greenlee.github.io/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html" />
+<meta property="og:url" content="https://fraser-greenlee.github.io/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html" />
 <meta property="og:site_name" content="Fraser Greenlee" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-08-25T00:00:00-05:00" />
 <script type="application/ld+json">
-{"url":"https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html","@type":"BlogPosting","headline":"Transformer-VAE for Program Synthesis","dateModified":"2020-08-25T00:00:00-05:00","datePublished":"2020-08-25T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://fraser-greenlee.github.io/fastpages/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html"},"description":"Find the right program in a latent space.","@context":"https://schema.org"}</script>
+{"url":"https://fraser-greenlee.github.io/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html","@type":"BlogPosting","headline":"Transformer-VAE for Program Synthesis","dateModified":"2020-08-25T00:00:00-05:00","datePublished":"2020-08-25T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://fraser-greenlee.github.io/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html"},"description":"Find the right program in a latent space.","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/fastpages/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://fraser-greenlee.github.io/fastpages/feed.xml" title="Fraser Greenlee" /><!-- the google_analytics_id gets auto inserted from the config file -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://fraser-greenlee.github.io/feed.xml" title="Fraser Greenlee" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
 
 
@@ -33,7 +33,7 @@
 </script>
 
 
-<link rel="shortcut icon" type="image/x-icon" href="/fastpages/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
 
 
@@ -86,7 +86,7 @@ window.onload = wrap_img;
 </head>
 <body><header class="site-header">
 
-  <div class="wrapper"><a class="site-title" rel="author" href="/fastpages/">Fraser Greenlee</a><nav class="site-nav">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Fraser Greenlee</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
         <label for="nav-trigger">
           <span class="menu-icon">
@@ -96,7 +96,7 @@ window.onload = wrap_img;
           </span>
         </label>
 
-        <div class="trigger"><a class="page-link" href="/fastpages/about/">About Me</a><a class="page-link" href="/fastpages/search/">Search</a><a class="page-link" href="/fastpages/categories/">Tags</a></div>
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
       </nav></div>
 </header>
 <main class="page-content" aria-label="Content">
@@ -117,16 +117,16 @@ window.onload = wrap_img;
     
       <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
       
-        <a class="category-tags-link" href="/fastpages/categories/#ML">ML</a>
+        <a class="category-tags-link" href="/categories/#ML">ML</a>
         &nbsp;
       
-        <a class="category-tags-link" href="/fastpages/categories/#Large prior-free models">Large prior-free models</a>
+        <a class="category-tags-link" href="/categories/#Large prior-free models">Large prior-free models</a>
         &nbsp;
       
-        <a class="category-tags-link" href="/fastpages/categories/#code">code</a>
+        <a class="category-tags-link" href="/categories/#code">code</a>
         &nbsp;
       
-        <a class="category-tags-link" href="/fastpages/categories/#Transformer-VAE">Transformer-VAE</a>
+        <a class="category-tags-link" href="/categories/#Transformer-VAE">Transformer-VAE</a>
         
       
       </p>
@@ -168,7 +168,7 @@ The search space is then constrained to programs that increase said score.</p>
 
 <p>To do This T5-VAEs are trained to represent code and state. Their resulting encodings are concatenated and given to what I’m calling an executor which is a T5-encoder which maps the (state + code) encoding into the resulting state. This is then passed to the state autoencoder again to be decoded into the resulting state.</p>
 
-<p><img src="/fastpages/images/prog_synth/latent_executor.png" alt="![.](/fastpages/images/prog_synth/latent_executor.png)" title="The Latent Executor"></p>
+<p><img src="/images/prog_synth/latent_executor.png" alt="![.](/images/prog_synth/latent_executor.png)" title="The Latent Executor"></p>
 
 <h2 id="initial-tests">
 <a class="anchor" href="#initial-tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initial Tests</h2>
@@ -183,7 +183,7 @@ By only using 2 latent dimensions the space of “programs” was easy to visual
 
 <p>Here are the resulting state and code latent spaces.</p>
 
-<p><img src="/fastpages/images/prog_synth/joint_latent_pos.png" alt="![.](/fastpages/images/prog_synth/joint_latent_pos.png)" title="Here darker values represent higher values from -99 to 99."></p>
+<p><img src="/images/prog_synth/joint_latent_pos.png" alt="![.](/images/prog_synth/joint_latent_pos.png)" title="Here darker values represent higher values from -99 to 99."></p>
 
 <p>Even though the model just sees abstract tokens it has still grouped numbers with similar values.
 The code space looks better organised than the state space.
@@ -193,14 +193,14 @@ T5-VAE is an MMD-VAE meaning it computes its regularisation loss using the maxim
 <p>A varient with a 10-dimensional latent space was also trained and by using t-SNE with multiple perplexities we can see a similar orginisation of state and code.
 Lower perplexities show local structure while high perplexities show global structure.</p>
 
-<p><img src="/fastpages/images/prog_synth/code_tsne.png" alt="![.](/fastpages/images/prog_synth/code_tsne.png)" title="Code, note the similar split between small and large values."></p>
+<p><img src="/images/prog_synth/code_tsne.png" alt="![.](/images/prog_synth/code_tsne.png)" title="Code, note the similar split between small and large values."></p>
 
-<p><img src="/fastpages/images/prog_synth/state_tsne.png" alt="![.](/fastpages/images/prog_synth/state_tsne.png)" title="State, note the similar hole shape only visible at 100 perplexity."></p>
+<p><img src="/images/prog_synth/state_tsne.png" alt="![.](/images/prog_synth/state_tsne.png)" title="State, note the similar hole shape only visible at 100 perplexity."></p>
 
 <p>Since a continuous space of well organised code was found, it was time to try measuring the loss for different “programs” and check its accuracy.
 The loss used was state-decoder cross entropy which gave the most reliable signal.</p>
 
-<p><img src="/fastpages/images/prog_synth/dec_ce_71m53eq18.png" alt="![.](/fastpages/images/prog_synth/dec_ce_71m53eq18.png)" title="Loss for the sum 71+?=18, the correct answer is -53."></p>
+<p><img src="/images/prog_synth/dec_ce_71m53eq18.png" alt="![.](/images/prog_synth/dec_ce_71m53eq18.png)" title="Loss for the sum 71+?=18, the correct answer is -53."></p>
 
 <p>Looking at the loss, the lowest values (coloured white) are at or near -53.
 You can also see that the space is not perfectly organised, -50 and -51 are at oposite ends of the y-axis.
@@ -225,20 +225,20 @@ That combined with a greater range of values should make a more interesting prog
         theme="github-light"
         crossorigin="anonymous"
         async>
-</script><a class="u-url" href="/fastpages/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html" hidden></a>
+</script><a class="u-url" href="/ml/large%20prior-free%20models/code/transformer-vae/2020/08/25/Transformer-VAE-for-Program-Synthesis.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
-  <data class="u-url" href="/fastpages/"></data>
+  <data class="u-url" href="/"></data>
 
   <div class="wrapper">
 
     <div class="footer-col-wrapper">
       <div class="footer-col">
         <p class="feed-subscribe">
-          <a href="/fastpages/feed.xml">
+          <a href="/feed.xml">
             <svg class="svg-icon orange">
-              <use xlink:href="/fastpages/assets/minima-social-icons.svg#rss"></use>
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
             </svg><span>Subscribe</span>
           </a>
         </p>
@@ -248,7 +248,7 @@ That combined with a greater range of values should make a more interesting prog
       </div>
     </div>
 
-    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/Fraser-Greenlee" title="Fraser-Greenlee"><svg class="svg-icon grey"><use xlink:href="/fastpages/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/FraserGreenlee" title="FraserGreenlee"><svg class="svg-icon grey"><use xlink:href="/fastpages/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/Fraser-Greenlee" title="Fraser-Greenlee"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/FraserGreenlee" title="FraserGreenlee"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
 </div>
 
   </div>

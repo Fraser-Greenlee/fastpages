@@ -1,1 +1,1 @@
-Sitemap: https://fraser-greenlee.github.io/fastpages/sitemap.xml
+Sitemap: https://fraser-greenlee.github.io/sitemap.xml
