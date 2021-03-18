@@ -4,7 +4,7 @@ description: Finding the physics of water bending.
 categories: [games, simulation]
 title: An Avatar game with realistic physics
 comments: true
-image: {{ site.baseurl }}/images/katara_waterbend_arrows.gif
+image: https://raw.githubusercontent.com/Fraser-Greenlee/fastpages/master/images/katara_waterbend_arrows.gif
 ---
 
 After watching [Avatar: The Last Airbender](https://www.imdb.com/title/tt0417299/) I wanted to experience bending the elements just like in the show.
