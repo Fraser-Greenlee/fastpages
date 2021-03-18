@@ -4,6 +4,7 @@ description: Finding the physics of water bending.
 categories: [games, simulation]
 title: An Avatar game with realistic physics
 comments: true
+image: {{ site.baseurl }}/images/katara_waterbend_arrows.gif
 ---
 
 After watching [Avatar: The Last Airbender](https://www.imdb.com/title/tt0417299/) I wanted to experience bending the elements just like in the show.
@@ -25,7 +26,7 @@ It comes with this demo below, **click below** to try it!
 
 <!-- {% raw %} -->
 <figure class="iframe">
-    <iframe src="/fastpages/games/LiquidFun-ColorFaucet"></iframe>
+    <iframe src="/games/LiquidFun-ColorFaucet"></iframe>
 </figure>
 <!-- {% endraw %} -->
 
@@ -53,18 +54,18 @@ Below I show the cell values with white arrows (longer for greator velocity incr
 
 <!-- {% raw %} -->
 <figure class="iframe">
-    <iframe src="/fastpages/games/LiquidFun-ColorFaucet-Bending"></iframe>
+    <iframe src="/games/LiquidFun-ColorFaucet-Bending"></iframe>
 </figure>
 <!-- {% endraw %} -->
 
 Then by making particles with different physical properties you get different materials.
 Ice is a solid group of particles, green acid mixes colour with the blue water, slime is a sticky group of particles while mud is viscous.
 
-{% include video.html url="/fastpages/videos/water-materials.mp4" %}
+{% include video.html url="/videos/water-materials.mp4" %}
 
-{% include video.html url="/fastpages/videos/firebend-combat.mp4" %}
+{% include video.html url="/videos/firebend-combat.mp4" %}
 
-{% include video.html url="/fastpages/videos/water-fight.mp4" %}
+{% include video.html url="/videos/water-fight.mp4" %}
 
 Checkout the 2D source [here](https://github.com/Fraser-Greenlee/benders).
 
