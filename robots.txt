@@ -1,1 +1,1 @@
-Sitemap: https://fraser-greenlee.github.io/sitemap.xml
+Sitemap: http://fras.uk/sitemap.xml
