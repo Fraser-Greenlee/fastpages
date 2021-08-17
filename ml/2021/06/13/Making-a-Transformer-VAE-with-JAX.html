@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Making a Transformer-VAE with JAX. | Fraser Greenlee</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Making a Transformer-VAE with JAX." />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="And how you can make new Transformers with JAX." />
+<meta property="og:description" content="And how you can make new Transformers with JAX." />
+<link rel="canonical" href="http://fras.uk/ml/2021/06/13/Making-a-Transformer-VAE-with-JAX.html" />
+<meta property="og:url" content="http://fras.uk/ml/2021/06/13/Making-a-Transformer-VAE-with-JAX.html" />
+<meta property="og:site_name" content="Fraser Greenlee" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-13T00:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"http://fras.uk/ml/2021/06/13/Making-a-Transformer-VAE-with-JAX.html","@type":"BlogPosting","headline":"Making a Transformer-VAE with JAX.","dateModified":"2021-06-13T00:00:00-05:00","datePublished":"2021-06-13T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://fras.uk/ml/2021/06/13/Making-a-Transformer-VAE-with-JAX.html"},"description":"And how you can make new Transformers with JAX.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="http://fras.uk/feed.xml" title="Fraser Greenlee" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JGPYQFPWNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JGPYQFPWNN');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Fraser Greenlee</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About Me</a><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Making a Transformer-VAE with JAX.</h1><p class="page-description">And how you can make new Transformers with JAX.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-06-13T00:00:00-05:00" itemprop="datePublished">
+        Jun 13, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#ML">ML</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#making-your-own-transformer">Making your own transformer</a></li>
+<li class="toc-entry toc-h2"><a href="#how-i-made-the-transformer">How I made the Transformer</a></li>
+<li class="toc-entry toc-h2"><a href="#training">Training</a></li>
+<li class="toc-entry toc-h2"><a href="#debugging">Debugging</a></li>
+<li class="toc-entry toc-h2"><a href="#run-training">Run Training</a></li>
+<li class="toc-entry toc-h2"><a href="#share-your-work">Share your work</a></li>
+</ul><p>JAX allows writing simple code that runs efficiently on TPUs.
+These models can then operate on massive scales setting new benchmarks in performance.</p>
+
+<p>For an intro to JAX &amp; Flax please checkout these sources:</p>
+
+<p>Intro to JAX &amp; Flax
+https://www.youtube.com/watch?v=fuAyUQcVzTY&amp;t=5127s</p>
+
+<p>Using Flax with Huggingface
+https://www.youtube.com/watch?v=fuAyUQcVzTY&amp;t=5127s</p>
+
+<p>If you’d like to skip the post and just checkout the code you can see the source for training a <a href="https://huggingface.co/flax-community/t5-vae-python">Python</a> and <a href="https://huggingface.co/flax-community/t5-vae-wiki">Wikipedia</a> VAEs.</p>
+
+<h2 id="making-your-own-transformer">
+<a class="anchor" href="#making-your-own-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Making your own transformer</h2>
+
+<p>Its important to remember that deep neural nets performing the same task learn universal features <a href="https://distill.pub/2020/circuits/early-vision/">see circuits</a>.
+This means all transformer architectures are largely equivilent with only small changes mattering.</p>
+
+<p>With that in mind you should build your new model on existing Transformers with your unique change added to it.</p>
+
+<p>For the Transformer-VAE I wanted to modify a T5 model to average pool the hidden states into one token.</p>
+
+<video class="codespaces-hero-video d-block width-full bg-white" alt="Codespaces demo" playsinline="" muted="" loop="" autoplay="">
+    <source type="video/mp4" src="/videos/avg-pool-t5.mp4"></source>
+</video>
+
+<p>And to autoencode that hidden token with a VAE.</p>
+
+<p><img src="/images/t5-blank-vae.png" alt="."></p>
+
+<p><img src="/images/t5-deep-vae.png" alt="."></p>
+
+<p>But with a regularising loss that operates on each batch.</p>
+
+<p><img src="/images/t5-vae-loss-batch.png" alt="."></p>
+
+<p><img src="/images/t5-vae-loss-batch-2.png" alt="."></p>
+
+<p>This would allow interpolating on sequences as you can see in my <a href=".">previous PyTorch version</a>.</p>
+
+<h2 id="how-i-made-the-transformer">
+<a class="anchor" href="#how-i-made-the-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>How I made the Transformer</h2>
+
+<p>I started by making a repo to later use as GitHub submodules, this helpped for using in multiple places.</p>
+
+<p>Now to make a new Tranformer there’s some boilerplate you’ll need to start off with.</p>
+
+<p><strong><a href="https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/config.py">config.py</a></strong></p>
+
+<p>Adds the extra configuration options you’ll need:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">transformers.configuration_utils</span> <span class="kn">import</span> <span class="n">PretrainedConfig</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoConfig</span>
+
+<span class="k">class</span> <span class="nc">T5VaeConfig</span><span class="p">(</span><span class="n">PretrainedConfig</span><span class="p">):</span>
+    <span class="n">model_type</span> <span class="o">=</span> <span class="s">"transformer_vae"</span>
+    <span class="n">is_composition</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="c1"># custom config
+</span>        <span class="n">t5_model_name_or_path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+        <span class="n">n_latent_tokens</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+        <span class="n">latent_token_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="p">...</span>
+        <span class="c1"># T5 config
+</span>        <span class="n">t5</span><span class="o">=</span><span class="nb">dict</span><span class="p">(),</span>
+        <span class="n">vocab_size</span><span class="o">=</span><span class="mi">32128</span><span class="p">,</span>
+        <span class="n">d_model</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+        <span class="p">...</span>
+        <span class="c1"># end
+</span>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="p">...</span>
+        <span class="c1"># You can load other configs as attributes to your own config
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">t5</span> <span class="o">=</span> <span class="n">AutoConfig</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">t5_model_name_or_path</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">)</span>
+        <span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">t5</span><span class="p">.</span><span class="n">model_type</span><span class="p">,</span> <span class="s">"t5"</span><span class="p">,</span> <span class="s">"Need t5 model type for transformer_decoder."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">t5</span><span class="p">.</span><span class="n">decoder_start_token_id</span> <span class="o">=</span> <span class="n">decoder_start_token_id</span>
+</code></pre></div></div>
+
+<p><strong><a href="https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/t5_vae.py">t5_vae.py</a></strong></p>
+
+<p>This holds the main source code for the model.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FlaxT5VaeForAutoencodingModule</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="s">'''
+        Runs the model inference.
+    '''</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">T5VaeConfig</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">jnp</span><span class="p">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">jnp</span><span class="p">.</span><span class="n">float32</span>  <span class="c1"># the dtype of the computation
+</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Here we initialise the transformer we're building on
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">t5</span> <span class="o">=</span> <span class="n">FlaxT5ForConditionalGenerationModule</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">t5</span><span class="p">)</span>
+        <span class="c1"># And load the VAE to be added.
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">vae</span> <span class="o">=</span> <span class="n">VAE</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">FlaxT5VaePreTrainedModel</span><span class="p">(</span><span class="n">FlaxPreTrainedModel</span><span class="p">):</span>
+    <span class="s">'''
+        An abstract class to handle weights initialization and a simple interface for downloading and loading pretrained models.
+    '''</span>
+    <span class="n">config_class</span> <span class="o">=</span> <span class="n">T5VaeConfig</span>
+    <span class="n">base_model_prefix</span> <span class="o">=</span> <span class="s">"transformer"</span>
+    <span class="n">module_class</span><span class="p">:</span> <span class="n">nn</span><span class="p">.</span><span class="n">Module</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">T5VaeConfig</span><span class="p">,</span>
+        <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">jnp</span><span class="p">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">jnp</span><span class="p">.</span><span class="n">float32</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">module_class</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">().</span><span class="n">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">FlaxT5VaeForAutoencoding</span><span class="p">(</span><span class="n">FlaxT5VaePreTrainedModel</span><span class="p">):</span>
+    <span class="s">'''
+        Holds the module class &amp; prepared inputs for inference.
+    '''</span>
+    <span class="n">module_class</span> <span class="o">=</span> <span class="n">FlaxT5VaeForAutoencodingModule</span>
+</code></pre></div></div>
+
+<p>For the custom Flax model (in this case VAE) its just a regular Flax model.</p>
+
+<p><strong><a href="https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/vae.py">vae.py</a></strong></p>
+
+<p>For more Flax examples see <a href="https://github.com/google/flax#what-does-flax-look-like">here</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">VAE</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">T5VaeConfig</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">jnp</span><span class="p">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">jnp</span><span class="p">.</span><span class="n">float32</span>  <span class="c1"># the dtype of the computation
+</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">VAE_ENCODER_MODELS</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">vae_encoder_model</span><span class="p">](</span><span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">latent_token_size</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">n_latent_tokens</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">VAE_DECODER_MODELS</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">vae_decoder_model</span><span class="p">](</span><span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">t5</span><span class="p">.</span><span class="n">d_model</span><span class="p">,</span>  <span class="bp">self</span><span class="p">.</span><span class="n">config</span><span class="p">.</span><span class="n">n_latent_tokens</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">latent_codes</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">latent_codes</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">latent_codes</span><span class="p">),</span> <span class="n">latent_codes</span>
+</code></pre></div></div>
+
+<h2 id="training">
+<a class="anchor" href="#training" aria-hidden="true"><span class="octicon octicon-link"></span></a>Training</h2>
+
+<p>Now that you’ve got your model code setup you can start training!</p>
+
+<p>First make a <a href="https://huggingface.co/new">new huggingface model</a>.</p>
+
+<p>This will hold the training code and model weights.
+The model code will be added as a git submodule.</p>
+
+<p>For a train script use one of the <a href="https://github.com/huggingface/transformers/tree/master/examples/flax">Huggingface examples</a>.</p>
+
+<h2 id="debugging">
+<a class="anchor" href="#debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Debugging</h2>
+
+<p>JAX is efficient because it gets compiled into XLA. This is great for performance but it makes debugging tricky.</p>
+
+<p>To get incremental runs of your code in Python you should build off the tests already in transformers.</p>
+
+<p>See <a href="https://github.com/huggingface/transformers/blob/master/tests/test_modeling_flax_t5.py">test_modeling_flax_t5.py</a>.</p>
+
+<h2 id="run-training">
+<a class="anchor" href="#run-training" aria-hidden="true"><span class="octicon octicon-link"></span></a>Run Training</h2>
+
+<p>During the HF sprint I got to use a TPUv3-8 which allowed training with an 800 batch size with N tokens per sentence.</p>
+
+<p>Sadly this training only started 6 hours before the contest ended so it only saw 5% of wikipedia.</p>
+
+<h2 id="share-your-work">
+<a class="anchor" href="#share-your-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>Share your work</h2>
+
+<p>Finally you can share your new model using a Streamlit demo on Huggingface spaces.</p>
+
+<p>Checkout the Transformer-VAE one <a href="https://huggingface.co/spaces/flax-community/t5-vae">here</a>.</p>
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="Fraser-Greenlee/fastpages"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/ml/2021/06/13/Making-a-Transformer-VAE-with-JAX.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>ML projects et al.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/Fraser-Greenlee" title="Fraser-Greenlee"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/FraserGreenlee" title="FraserGreenlee"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
