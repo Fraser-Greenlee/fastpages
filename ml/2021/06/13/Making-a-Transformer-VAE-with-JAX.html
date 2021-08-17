@@ -138,13 +138,19 @@ These models can then operate on massive scales setting new benchmarks in perfor
 
 <p>For an intro to JAX &amp; Flax please checkout these sources:</p>
 
-<p>Intro to JAX &amp; Flax
-https://www.youtube.com/watch?v=fuAyUQcVzTY&amp;t=5127s</p>
+<p>Intro to JAX &amp; Flax,</p>
 
-<p>Using Flax with Huggingface
-https://www.youtube.com/watch?v=fuAyUQcVzTY&amp;t=5127s</p>
+<center>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/XfoYk_Z5AkI" frameborder="0" allowfullscreen=""></iframe>
+</center>
 
-<p>If you’d like to skip the post and just checkout the code you can see the source for training a <a href="https://huggingface.co/flax-community/t5-vae-python">Python</a> and <a href="https://huggingface.co/flax-community/t5-vae-wiki">Wikipedia</a> VAEs.</p>
+<p>Using Flax with Huggingface</p>
+
+<center>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/fuAyUQcVzTY" frameborder="0" allowfullscreen=""></iframe>
+</center>
+
+<p>If you’d like to skip the post and just checkout the code you can see the source for training <a href="https://huggingface.co/flax-community/t5-vae-python">Python</a> and <a href="https://huggingface.co/flax-community/t5-vae-wiki">Wikipedia</a> VAEs.</p>
 
 <h2 id="making-your-own-transformer">
 <a class="anchor" href="#making-your-own-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Making your own transformer</h2>
@@ -162,28 +168,26 @@ This means all transformer architectures are largely equivilent with only small 
 
 <p>And to autoencode that hidden token with a VAE.</p>
 
-<p><img src="/images/t5-blank-vae.png" alt="."></p>
-
 <p><img src="/images/t5-deep-vae.png" alt="."></p>
 
-<p>But with a regularising loss that operates on each batch.</p>
-
-<p><img src="/images/t5-vae-loss-batch.png" alt="."></p>
+<p>With a regularising loss that operates on each batch.</p>
 
 <p><img src="/images/t5-vae-loss-batch-2.png" alt="."></p>
 
-<p>This would allow interpolating on sequences as you can see in my <a href=".">previous PyTorch version</a>.</p>
+<p>This would allow interpolating on sequences.</p>
 
 <h2 id="how-i-made-the-transformer">
 <a class="anchor" href="#how-i-made-the-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>How I made the Transformer</h2>
 
-<p>I started by making a repo to later use as GitHub submodules, this helpped for using in multiple places.</p>
+<p>I started by making a repo to hold the model code.</p>
 
-<p>Now to make a new Tranformer there’s some boilerplate you’ll need to start off with.</p>
+<p>This will be used by each trained model.</p>
+
+<p>To make a new Flax Tranformer there’s some boilerplate you’ll need to start off with.</p>
 
 <p><strong><a href="https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/config.py">config.py</a></strong></p>
 
-<p>Adds the extra configuration options you’ll need:</p>
+<p>Adds the extra configuration options your new transformer need:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">transformers.configuration_utils</span> <span class="kn">import</span> <span class="n">PretrainedConfig</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoConfig</span>
@@ -194,7 +198,7 @@ This means all transformer architectures are largely equivilent with only small 
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="c1"># custom config
+        <span class="c1"># custom VAE config
 </span>        <span class="n">t5_model_name_or_path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
         <span class="n">n_latent_tokens</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
         <span class="n">latent_token_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
@@ -258,11 +262,9 @@ This means all transformer architectures are largely equivilent with only small 
     <span class="n">module_class</span> <span class="o">=</span> <span class="n">FlaxT5VaeForAutoencodingModule</span>
 </code></pre></div></div>
 
-<p>For the custom Flax model (in this case VAE) its just a regular Flax model.</p>
+<p>For the custom Flax model (in this case a VAE) its just a regular Flax model.</p>
 
 <p><strong><a href="https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/vae.py">vae.py</a></strong></p>
-
-<p>For more Flax examples see <a href="https://github.com/google/flax#what-does-flax-look-like">here</a>.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">VAE</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">T5VaeConfig</span>
@@ -277,6 +279,8 @@ This means all transformer architectures are largely equivilent with only small 
         <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">latent_codes</span><span class="p">),</span> <span class="n">latent_codes</span>
 </code></pre></div></div>
 
+<p>For more Flax examples see <a href="https://github.com/google/flax#what-does-flax-look-like">What does Flax look like</a>.</p>
+
 <h2 id="training">
 <a class="anchor" href="#training" aria-hidden="true"><span class="octicon octicon-link"></span></a>Training</h2>
 
@@ -287,7 +291,7 @@ This means all transformer architectures are largely equivilent with only small 
 <p>This will hold the training code and model weights.
 The model code will be added as a git submodule.</p>
 
-<p>For a train script use one of the <a href="https://github.com/huggingface/transformers/tree/master/examples/flax">Huggingface examples</a>.</p>
+<p>For a train script build on one of the <a href="https://github.com/huggingface/transformers/tree/master/examples/flax">Huggingface examples</a>.</p>
 
 <h2 id="debugging">
 <a class="anchor" href="#debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Debugging</h2>
