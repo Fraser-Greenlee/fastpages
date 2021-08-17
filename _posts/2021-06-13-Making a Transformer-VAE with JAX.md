@@ -13,13 +13,13 @@ These models can then operate on massive scales setting new benchmarks in perfor
 
 For an intro to JAX & Flax please checkout these sources:
 
-Intro to JAX & Flax
-https://www.youtube.com/watch?v=fuAyUQcVzTY&t=5127s
+Intro to JAX & Flax,
+{% include youtube.html content="https://youtu.be/XfoYk_Z5AkI" %}
 
 Using Flax with Huggingface
-https://www.youtube.com/watch?v=fuAyUQcVzTY&t=5127s
+{% include youtube.html content="https://youtu.be/fuAyUQcVzTY" %}
 
-If you'd like to skip the post and just checkout the code you can see the source for training a [Python](https://huggingface.co/flax-community/t5-vae-python) and [Wikipedia](https://huggingface.co/flax-community/t5-vae-wiki) VAEs.
+If you'd like to skip the post and just checkout the code you can see the source for training [Python](https://huggingface.co/flax-community/t5-vae-python) and [Wikipedia](https://huggingface.co/flax-community/t5-vae-wiki) VAEs.
 
 ## Making your own transformer
 
@@ -34,27 +34,25 @@ For the Transformer-VAE I wanted to modify a T5 model to average pool the hidden
 
 And to autoencode that hidden token with a VAE.
 
-![.]({{ site.baseurl }}/images/t5-blank-vae.png)
-
 ![.]({{ site.baseurl }}/images/t5-deep-vae.png)
 
-But with a regularising loss that operates on each batch.
-
-![.]({{ site.baseurl }}/images/t5-vae-loss-batch.png)
+With a regularising loss that operates on each batch.
 
 ![.]({{ site.baseurl }}/images/t5-vae-loss-batch-2.png)
 
-This would allow interpolating on sequences as you can see in my [previous PyTorch version](.).
+This would allow interpolating on sequences.
 
 ## How I made the Transformer
 
-I started by making a repo to later use as GitHub submodules, this helpped for using in multiple places.
+I started by making a repo to hold the model code.
 
-Now to make a new Tranformer there's some boilerplate you'll need to start off with.
+This will be used by each trained model.
+
+To make a new Flax Tranformer there's some boilerplate you'll need to start off with.
 
 **[config.py](https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/config.py)**
 
-Adds the extra configuration options you'll need:
+Adds the extra configuration options your new transformer need:
 
 ```python
 from transformers.configuration_utils import PretrainedConfig
@@ -66,7 +64,7 @@ class T5VaeConfig(PretrainedConfig):
 
     def __init__(
         self,
-        # custom config
+        # custom VAE config
         t5_model_name_or_path=None,
         n_latent_tokens=6,
         latent_token_size=32,
@@ -131,11 +129,9 @@ class FlaxT5VaeForAutoencoding(FlaxT5VaePreTrainedModel):
     module_class = FlaxT5VaeForAutoencodingModule
 ```
 
-For the custom Flax model (in this case VAE) its just a regular Flax model.
+For the custom Flax model (in this case a VAE) its just a regular Flax model.
 
 **[vae.py](https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/vae.py)**
-
-For more Flax examples see [here](https://github.com/google/flax#what-does-flax-look-like).
 
 ```python
 class VAE(nn.Module):
@@ -151,6 +147,8 @@ class VAE(nn.Module):
         return self.decode(latent_codes), latent_codes
 ```
 
+For more Flax examples see [What does Flax look like](https://github.com/google/flax#what-does-flax-look-like).
+
 ## Training
 
 Now that you've got your model code setup you can start training!
@@ -160,7 +158,7 @@ First make a [new huggingface model](https://huggingface.co/new).
 This will hold the training code and model weights.
 The model code will be added as a git submodule.
 
-For a train script use one of the [Huggingface examples](https://github.com/huggingface/transformers/tree/master/examples/flax).
+For a train script build on one of the [Huggingface examples](https://github.com/huggingface/transformers/tree/master/examples/flax).
 
 ## Debugging
 
