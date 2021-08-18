@@ -133,32 +133,33 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#debugging">Debugging</a></li>
 <li class="toc-entry toc-h2"><a href="#run-training">Run Training</a></li>
 <li class="toc-entry toc-h2"><a href="#share-your-work">Share your work</a></li>
+<li class="toc-entry toc-h2"><a href="#final-thoughts">Final thoughts</a></li>
 </ul><p>JAX allows writing simple code that runs efficiently on TPUs.
 These models can then operate on massive scales setting new benchmarks in performance.</p>
 
-<p>For an intro to JAX &amp; Flax please checkout these sources:</p>
+<p>For an intro to JAX &amp; Flax please checkout…</p>
 
-<p>Intro to JAX &amp; Flax,</p>
+<p>Intro to JAX &amp; Flax:</p>
 
 <center>
     <iframe width="560" height="315" src="https://www.youtube.com/embed/XfoYk_Z5AkI" frameborder="0" allowfullscreen=""></iframe>
 </center>
 
-<p>Using Flax with Huggingface</p>
+<p>Using Flax with Huggingface:</p>
 
 <center>
     <iframe width="560" height="315" src="https://www.youtube.com/embed/fuAyUQcVzTY" frameborder="0" allowfullscreen=""></iframe>
 </center>
 
-<p>If you’d like to skip the post and just checkout the code you can see the source for training <a href="https://huggingface.co/flax-community/t5-vae-python">Python</a> and <a href="https://huggingface.co/flax-community/t5-vae-wiki">Wikipedia</a> VAEs.</p>
+<p>You can find the code from this post at <a href="https://huggingface.co/flax-community/t5-vae-python">t5-vae-python</a>, <a href="https://huggingface.co/flax-community/t5-vae-wiki">t5-vae-wiki</a> and the model code <a href="https://github.com/Fraser-Greenlee/t5-vae-flax">t5-vae-flax</a>.</p>
 
 <h2 id="making-your-own-transformer">
 <a class="anchor" href="#making-your-own-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Making your own transformer</h2>
 
-<p>Its important to remember that deep neural nets performing the same task learn universal features <a href="https://distill.pub/2020/circuits/early-vision/">see circuits</a>.
+<p>Its important to remember that deep neural nets learning the same task learn universal features <a href="https://distill.pub/2020/circuits/early-vision/">see circuits</a>.
 This means all transformer architectures are largely equivilent with only small changes mattering.</p>
 
-<p>With that in mind you should build your new model on existing Transformers with your unique change added to it.</p>
+<p>With that in mind you should probably build your new model on existing Transformers.</p>
 
 <p>For the Transformer-VAE I wanted to modify a T5 model to average pool the hidden states into one token.</p>
 
@@ -170,7 +171,7 @@ This means all transformer architectures are largely equivilent with only small 
 
 <p><img src="/images/t5-deep-vae.png" alt="."></p>
 
-<p>With a regularising loss that operates on each batch.</p>
+<p>With a regularising <a href="https://ermongroup.github.io/blog/a-tutorial-on-mmd-variational-autoencoders/">MMD-VAE loss</a> that operates on each batch.</p>
 
 <p><img src="/images/t5-vae-loss-batch-2.png" alt="."></p>
 
@@ -179,15 +180,13 @@ This means all transformer architectures are largely equivilent with only small 
 <h2 id="how-i-made-the-transformer">
 <a class="anchor" href="#how-i-made-the-transformer" aria-hidden="true"><span class="octicon octicon-link"></span></a>How I made the Transformer</h2>
 
-<p>I started by making a repo to hold the model code.</p>
-
-<p>This will be used by each trained model.</p>
+<p>The trained models will have their own git repos on the <a href="https://huggingface.co/models">model hub</a> with the model code as a git submodule shared between all trained models.</p>
 
 <p>To make a new Flax Tranformer there’s some boilerplate you’ll need to start off with.</p>
 
 <p><strong><a href="https://github.com/Fraser-Greenlee/t5-vae-flax/blob/main/src/config.py">config.py</a></strong></p>
 
-<p>Adds the extra configuration options your new transformer need:</p>
+<p>Adds the extra configuration options your new transformer will need:</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">transformers.configuration_utils</span> <span class="kn">import</span> <span class="n">PretrainedConfig</span>
 <span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoConfig</span>
@@ -288,10 +287,11 @@ This means all transformer architectures are largely equivilent with only small 
 
 <p>First make a <a href="https://huggingface.co/new">new huggingface model</a>.</p>
 
-<p>This will hold the training code and model weights.
-The model code will be added as a git submodule.</p>
+<p>This will hold the training code and model weights.</p>
 
 <p>For a train script build on one of the <a href="https://github.com/huggingface/transformers/tree/master/examples/flax">Huggingface examples</a>.</p>
+
+<p>You just need to switch out the model initialisation.</p>
 
 <h2 id="debugging">
 <a class="anchor" href="#debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Debugging</h2>
@@ -315,6 +315,11 @@ The model code will be added as a git submodule.</p>
 <p>Finally you can share your new model using a Streamlit demo on Huggingface spaces.</p>
 
 <p>Checkout the Transformer-VAE one <a href="https://huggingface.co/spaces/flax-community/t5-vae">here</a>.</p>
+
+<h2 id="final-thoughts">
+<a class="anchor" href="#final-thoughts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Final thoughts</h2>
+
+<p>While the I wasn’t able to get the performance I wanted with the Transformer-VAE I am excited to see people do with TPUs.</p>
 
   </div><!-- from https://github.com/utterance/utterances -->
 <script src="https://utteranc.es/client.js"
