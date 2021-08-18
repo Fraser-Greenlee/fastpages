@@ -2,7 +2,7 @@
 toc: true
 layout: post
 description: And how you can make new Transformers with JAX.
-categories: [ML]
+categories: [ML, Transformer-VAE]
 title: Making a Transformer-VAE with JAX.
 comments: true
 hide: false
