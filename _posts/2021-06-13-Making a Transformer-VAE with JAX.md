@@ -11,12 +11,8 @@ hide: false
 JAX allows writing simple code that runs efficiently on TPUs.
 These models can then operate on massive scales setting new benchmarks in performance.
 
-For an intro to JAX & Flax please checkout...
+For an intro to JAX & Flax please checkout day 1 talks from the Huggingface Jax sprint.
 
-Intro to JAX & Flax:
-{% include youtube.html content="https://youtu.be/XfoYk_Z5AkI" %}
-
-Using Flax with Huggingface:
 {% include youtube.html content="https://youtu.be/fuAyUQcVzTY" %}
 
 You can find the code from this post at [t5-vae-python](https://huggingface.co/flax-community/t5-vae-python), [t5-vae-wiki](https://huggingface.co/flax-community/t5-vae-wiki) and the model code [t5-vae-flax](https://github.com/Fraser-Greenlee/t5-vae-flax).
